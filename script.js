@@ -1,27 +1,37 @@
 const noBtn = document.getElementById('noBtn');
 const yesBtn = document.getElementById('yesBtn');
-const card = document.getElementById('card');
+const warningText = document.getElementById('warningText');
+let noClickedOnce = false;
 
 function placeNoButtonRandomly() {
-  const containerRect = card.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
-  const padding = 8;
-  const maxX = Math.max(0, containerRect.width - btnRect.width - padding);
-  const maxY = Math.max(0, containerRect.height - btnRect.height - padding);
+  const padding = 16;
+  const maxX = Math.max(0, window.innerWidth - btnRect.width - padding);
+  const maxY = Math.max(0, window.innerHeight - btnRect.height - padding);
   const x = Math.random() * maxX;
   const y = Math.random() * maxY;
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+  noBtn.style.left = `${x}px`;
+  noBtn.style.top = `${y}px`;
 }
 
 // Move away on hover so it's hard to click
 noBtn.addEventListener('mouseenter', () => {
-  placeNoButtonRandomly();
+  if (noClickedOnce) {
+    placeNoButtonRandomly();
+  }
 });
 
-// Prevent click and move if user somehow clicks
-noBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  placeNoButtonRandomly();
+// Allow first click, then move and show text in the original slot
+noBtn.addEventListener('click', () => {
+  if (!noClickedOnce) {
+    noClickedOnce = true;
+    warningText.textContent = 'Прям уверена?';
+    noBtn.classList.add('fixed');
+    placeNoButtonRandomly();
+  } else {
+    placeNoButtonRandomly();
+  }
 });
 
 // Confetti implementation (lightweight canvas particle system)
@@ -111,9 +121,4 @@ window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-});
-
-// Initial tiny nudge so the no button isn't directly under the yes button
-window.addEventListener('load', () => {
-  placeNoButtonRandomly();
 });
