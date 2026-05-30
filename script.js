@@ -107,6 +107,7 @@ function launchConfetti({count = 80, duration = 2200} = {}) {
 yesBtn.addEventListener('click', () => {
   yesBtn.textContent = 'Отлично! 😊';
   yesBtn.style.transform = 'scale(1.06)';
+  warningText.innerHTML = 'Жди уточнений в лс )))<br>Люблю тебя, Солнышко 😘😘';
   launchConfetti({count: 90});
   setTimeout(() => {
     yesBtn.style.transform = '';
